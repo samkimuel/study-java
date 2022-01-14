@@ -21,9 +21,9 @@ public class Product {
 	public static List<Product> productList() {
 		List<Product> productList = new ArrayList<>();
 		productList.add(new Product("product1", 10000L, 3));
-		productList.add(new Product("product1", 20000L, 4));
-		productList.add(new Product("product1", 30000L, 5));
-		productList.add(new Product("product1", 35000L, 6));
+		productList.add(new Product("product2", 20000L, 4));
+		productList.add(new Product("product3", 30000L, 5));
+		productList.add(new Product("product4", 35000L, 6));
 		return productList;
 	}
 
