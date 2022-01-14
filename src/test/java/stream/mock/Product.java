@@ -6,13 +6,13 @@ import java.util.List;
 public class Product {
 
 	private String name;
-	private long price;
+	private int price;
 	private int amount;
 
 	public Product() {
 	}
 
-	public Product(String name, long price, int amount) {
+	public Product(String name, int price, int amount) {
 		this.name = name;
 		this.price = price;
 		this.amount = amount;
@@ -20,10 +20,10 @@ public class Product {
 
 	public static List<Product> productList() {
 		List<Product> productList = new ArrayList<>();
-		productList.add(new Product("product1", 10000L, 3));
-		productList.add(new Product("product2", 20000L, 4));
-		productList.add(new Product("product3", 30000L, 5));
-		productList.add(new Product("product4", 35000L, 6));
+		productList.add(new Product("product1", 10000, 3));
+		productList.add(new Product("product2", 20000, 4));
+		productList.add(new Product("product3", 30000, 5));
+		productList.add(new Product("product4", 35000, 6));
 		return productList;
 	}
 
@@ -31,7 +31,7 @@ public class Product {
 		return name;
 	}
 
-	public long getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
