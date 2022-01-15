@@ -2,6 +2,7 @@ package stream;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -66,5 +67,47 @@ public class 가공하기 {
 			.flatMapToInt(product -> IntStream.of(product.getAmount()))
 			.average()
 			.ifPresent(average -> System.out.println(Math.round(average * 10) / 10.0));
+	}
+
+	@DisplayName("Sorting")
+	@Test
+	void sorting() {
+		// Comparator 이용
+		List<Integer> integerList = IntStream.of(14, 11, 20, 39, 23)
+			.sorted()
+			.boxed()
+			.toList();
+		integerList.forEach(System.out::println);
+		System.out.println("---");
+
+		// 인자를 넘기는 경우
+		List<String> lang =
+			Arrays.asList("Java", "C++", "Python", "Go", "Swift");
+
+		lang.stream()
+			.sorted()
+			.toList()
+			.forEach(System.out::println);
+		System.out.println("---");
+
+		// Comparator를 넘겨 역순으로 정렬
+		lang.stream()
+			.sorted(Comparator.reverseOrder())
+			.toList()
+			.forEach(System.out::println);
+		System.out.println("---");
+
+		// Comparator의 compare 메서드
+		// 두 인자를 비교해서 값을 리턴
+		lang.stream()
+			.sorted(Comparator.comparingInt(String::length))
+			.toList()
+			.forEach(System.out::println);
+		System.out.println("---");
+
+		lang.stream()
+			.sorted((value1, value2) -> value2.length() - value1.length())
+			.toList()
+			.forEach(System.out::println);
 	}
 }
