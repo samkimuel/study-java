@@ -1,5 +1,7 @@
 package stream;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -107,6 +109,24 @@ public class 가공하기 {
 
 		lang.stream()
 			.sorted((value1, value2) -> value2.length() - value1.length())
+			.toList()
+			.forEach(System.out::println);
+	}
+
+	@DisplayName("Iterating")
+	@Test
+	void iterating() {
+		// 스트림 내 요소들 각각을 대상으로 특정 연산 수행
+		// 함수형 인터페이스 Consumer를 인자로 받음
+		int sum = IntStream.of(1, 3, 5, 7, 9)
+			.peek(System.out::println)
+			.sum();
+		assertThat(sum).isEqualTo(25);
+
+		List<String> languages = Arrays.asList("Java", "C++", "Python", "Go", "Swift");
+		languages.stream()
+			.peek(lang -> System.out.println(lang.length()))
+			.filter(lang -> lang.length() > 3)
 			.toList()
 			.forEach(System.out::println);
 	}
