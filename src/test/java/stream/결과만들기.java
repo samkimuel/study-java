@@ -3,12 +3,21 @@ package stream;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IntSummaryStatistics;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.OptionalInt;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import stream.mock.Product;
 
 public class 결과만들기 {
 
@@ -92,5 +101,105 @@ public class 결과만들기 {
 						return a + b;
 					}
 				);
+	}
+
+	@DisplayName("Collecting")
+	@Test
+	void collecting() {
+		List<Product> productList = Product.productList();
+
+		// Collector 타입의 인자를 받아서 처리
+		// 자주 사용하는 작업은 Collectors 객체에서 제공하고 있음
+
+		// Collectors.toList()
+		// 스트림에서 작업한 결과를 담은 리스트로 반환
+		List<String> collectorCollection =
+			productList.stream()
+				.map(Product::getName)
+				.collect(Collectors.toList());
+		collectorCollection.forEach(System.out::println);
+
+		// Collector.joining()
+		// 스트림에서 작업한 결과를 하나의 스트링으로 이어 붙일 수 있음
+		String listToString =
+			productList.stream()
+				.map(Product::getName)
+				.collect(Collectors.joining());
+		System.out.println(listToString);
+
+		// Collectors.averagingInt()
+		// 숫자 값의 평균
+		Double averageAmount =
+			productList
+				.stream()
+				.collect(Collectors.averagingInt(Product::getAmount));
+		System.out.println(averageAmount);
+
+		// Collectors.summingInt()
+		// 숫자 값의 합
+		Integer summingAmount =
+			productList
+				.stream()
+				.collect(Collectors.summingInt(Product::getAmount));
+		System.out.println(summingAmount);
+		// mapToInt 메서드 사용해서 좀 더 간단하게 표현
+		Integer mapToIntAmount =
+			productList
+				.stream()
+				.mapToInt(Product::getAmount)
+				.sum();
+		System.out.println(mapToIntAmount);
+
+		// Collectors.summarizingInt()
+		// 합계와 평균 모두 필요하다면? -> 한 번에 얻을 수 있는 방법
+		// collect 전에 통계 작업을 위한 map 호출 필요 없음
+		IntSummaryStatistics statistics =
+			productList.stream()
+				.collect(Collectors.summarizingInt(Product::getAmount));
+		// statistics.getMax(), getAverage() 등
+		System.out.println(statistics);
+
+		// Collectors.groupingBy()
+		// 특정 조건으로 요소들을 그룹 짓기
+		// 받는 인자는 함수형 인터페이스 Function
+		// 결과 - Map 타입, 같은 수량이면 리스트로 묶어서 보여줌
+		Map<Integer, List<Product>> collectMapOfLists =
+			productList.stream()
+				.collect(Collectors.groupingBy(Product::getAmount));
+		System.out.println(collectMapOfLists);
+
+		// Collectors.partitioningBy()
+		// 함수형 인터페이스 Predicate를 받음
+		// 스트림 내 요소들을 true / false 두 가지로 나눔
+		Map<Boolean, List<Product>> mapPartitioned = productList.stream()
+			.collect(Collectors.partitioningBy(product -> product.getAmount() > 4));
+		System.out.println(mapPartitioned);
+		// get(true), get(false)
+		System.out.println(mapPartitioned.get(true));
+
+		// Collectors.collectingAndThen()
+		// 특정 타입으로 결과를 collect 한 이후에 추가 작업이 필요한 경우 사용
+		Set<Product> unmodifiableSet = productList.stream()
+			.collect(Collectors.collectingAndThen(
+				Collectors.toSet(),
+				Collections::unmodifiableSet
+			));
+		System.out.println(unmodifiableSet);
+
+		// Collector.of()
+		// 직접 collector 만들기
+		Collector<Product, LinkedList<Product>, LinkedList<Product>> toLinkedList =
+			Collector.of(
+				LinkedList::new,
+				LinkedList::add,
+				(first, second) -> {
+					first.addAll(second);
+					return first;
+				}
+			);
+
+		LinkedList<Product> linkedListOfProducts = productList.stream()
+			.collect(toLinkedList);
+		System.out.println(linkedListOfProducts);
 	}
 }

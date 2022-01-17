@@ -24,6 +24,7 @@ public class Product {
 		productList.add(new Product("product2", 20000, 4));
 		productList.add(new Product("product3", 30000, 5));
 		productList.add(new Product("product4", 35000, 6));
+		productList.add(new Product("product5", 40000, 3));
 		return productList;
 	}
 
