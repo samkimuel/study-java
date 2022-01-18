@@ -202,4 +202,38 @@ public class 결과만들기 {
 			.collect(toLinkedList);
 		System.out.println(linkedListOfProducts);
 	}
+
+	@DisplayName("Matching")
+	@Test
+	void matching() {
+		List<Product> productList = Product.productList();
+		// Predicate를 받아서 해당 조건을 만족하는 요소가 있는지 체크한 결과 리턴
+		// anyMatch - 하나라도 조건을 만족하는 요소가 있는지
+		boolean anyMatch =
+			productList.stream()
+				.anyMatch(product -> product.getPrice() == 40000);
+		assertThat(anyMatch).isTrue();
+
+		// allMatch - 모두 조건을 만족하는지
+		boolean allMatch =
+			productList.stream()
+				.allMatch(product -> product.getName().contains("product"));
+		assertThat(allMatch).isTrue();
+
+		// noneMatch - 모두 조건을 만족하지 않는지
+		boolean noneMatch =
+			productList.stream()
+				.noneMatch(product -> product.getAmount() > 5);
+		assertThat(noneMatch).isFalse();
+	}
+
+	@DisplayName("Iterating")
+	@Test
+	void iterating() {
+		// forEach 요소를 돌면서 실행되는 최종 작업
+		// peek과는 중간 작업과 최종 작업의 차이가 있음
+		Product.productList().stream()
+			.forEach(System.out::println);
+	}
+
 }
