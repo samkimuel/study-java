@@ -8,9 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import mock.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import stream.mock.Product;
 
 public class 가공하기 {
 
