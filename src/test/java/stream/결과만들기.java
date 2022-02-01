@@ -2,6 +2,7 @@ package stream;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IntSummaryStatistics;
@@ -16,6 +17,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import mock.Product;
+import mock.ProductGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -236,4 +238,47 @@ public class 결과만들기 {
 			.forEach(System.out::println);
 	}
 
+	@DisplayName("Grouping")
+	@Test
+	void grouping() {
+		// 특정 조건으로 요소들을 그룹짓기
+		// 받는 인자 Function
+		List<Product> products = Product.productList();
+		Map<Integer, List<Product>> collectorMap = products.stream()
+			.collect(Collectors.groupingBy(Product::getAmount));
+		collectorMap.forEach((amount, list) -> System.out.println(amount + " " + list));
+	}
+
+	@DisplayName("n개 인수, 1차원 그룹화")
+	@Test
+	void groupingToOneDimension() {
+		List<Product> products = Product.productList();
+
+		// ProductGroup 기준
+		Map<ProductGroup, List<Product>> collect = products.stream()
+			.collect(Collectors.groupingBy(ProductGroup::new));
+		for (ProductGroup productGroup : collect.keySet()) {
+			System.out.println(
+				MessageFormat.format(
+					"{0}/{1}/{2} : {3}",
+					productGroup.getName(),
+					productGroup.getPrice(),
+					productGroup.getAmount(),
+					collect.get(productGroup)
+				));
+		}
+	}
+
+	@Test
+	void groupingSumming() {
+		List<Product> products = Product.productList();
+
+		Map<String, Integer> result = products.stream()
+			.collect(
+				Collectors.groupingBy(
+					Product::getName,
+					Collectors.summingInt(Product::getAmount)
+				));
+		System.out.println(result);
+	}
 }
